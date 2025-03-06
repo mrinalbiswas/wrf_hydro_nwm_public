@@ -126,6 +126,8 @@ end subroutine NoahMP_vectorizing_tools_destroy
 #endif
 #ifdef WRF_HYDRO
                sfcheadrt,INFXSRT,soldrain,                                  &
+!Added by Biswas
+               INFXSRT_t,soldrain_t,                            &
 #endif
                ids,ide,  jds,jde,  kds,kde,                    &
                ims,ime,  jms,jme,  kms,kme,                    &
@@ -207,6 +209,8 @@ end subroutine NoahMP_vectorizing_tools_destroy
     REAL,    DIMENSION( ims:ime,          jms:jme ), INTENT(IN   ), OPTIONAL ::  MP_HAIL   ! hail precipitation entering land model [mm]       ! MB/AN : v3.7
 #ifdef WRF_HYDRO
     REAL,    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  sfcheadrt,INFXSRT,soldrain   ! for WRF-Hydro
+!Added by Biswas
+    REAL,    DIMENSION( ims:ime,          jms:jme ), INTENT(INOUT) ::  INFXSRT_t,soldrain_t   ! for WRF-Hydro
 #endif
 #ifdef SPATIAL_SOIL
     REAL,    DIMENSION( ims:ime, 1:nsoil, jms:jme ), INTENT(IN) ::  BEXP_3D   ! C-H B exponent
@@ -1401,6 +1405,16 @@ end subroutine NoahMP_vectorizing_tools_destroy
 
             soldrain(i,j) = max(RUNSB*dt, 0.)        !mm , underground runoff
             INFXSRT(i,j) = RUNSF*dt        !mm , surface runoff
+
+!Added by Biswas
+            soldrain_t(i,j) = TSLB(i,NSOIL,j)
+            print *, "SOLDRAIN_T :",soldrain_t(i,j)
+            if(SNOWH(i,j) .gt. 0.0) then
+             infxsrt_t(i,j) = 273.15
+            else
+             infxsrt_t(i,j) = TGXY(i,j)
+            endif
+            print *, "INFXSRT :",infxsrt_t(i,j)
 
 #endif
 

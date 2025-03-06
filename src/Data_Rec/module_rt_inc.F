@@ -76,6 +76,9 @@ module module_rt_inc
   !REAL,    allocatable, DIMENSION(:,:)      :: LKSATRT !  LKSATRT moved to subsurface properties module
   !REAL,    allocatable, DIMENSION(:,:)      :: SFCHEADRT,INFXSRT,LKSAT  ! SFCHEAD moved to overland control module
   REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT,LKSAT,LKSATRT
+!Added by Biswas
+  REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT_T
+
   !REAL,    allocatable, DIMENSION(:,:)      :: SFCHEADSUBRT,INFXSUBRT,LKSATFAC  ! SFCHEADSUBRT, INFXSUBRT moved to overland control module
   REAL,    allocatable, DIMENSION(:,:)      :: LKSATFAC
   REAL,    allocatable, DIMENSION(:,:)      :: IMPERVFRAC
@@ -98,6 +101,9 @@ module module_rt_inc
   INTEGER, allocatable, DIMENSION(:,:)   :: GWSUBBASMSK  !GW basin mask grid
   REAL,    allocatable, DIMENSION(:,:)   :: qinflowbase  !strm inflow/baseflow from GW
   REAL,    allocatable, DIMENSION(:,:)   :: SOLDRAIN     !time-step drainage
+!Added by Biswas
+  REAL,    allocatable, DIMENSION(:,:)   :: SOLDRAIN_T   !time-step drainage
+
   INTEGER, allocatable, DIMENSION(:,:)   :: gw_strm_msk  !GW basin mask grid
   INTEGER, allocatable, DIMENSION(:,:)   :: gw_strm_msk_lind  !GW basin mask grid tile maping index
   REAL,    allocatable, DIMENSION(:)     :: z_gwsubbas   !depth in GW bucket

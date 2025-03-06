@@ -5954,6 +5954,9 @@ end subroutine mpp_output_chrt
           iret = nf90_def_var(ncid, "infxsrt", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "soldrain", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "sfcheadrt", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
+!Added by Biswas
+          iret = nf90_def_var(ncid, "infxsrt_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
+          iret = nf90_def_var(ncid, "soldrain_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
 
        end if  ! neither channel_only nor channelBucket_only
 

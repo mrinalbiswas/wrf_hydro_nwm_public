@@ -59,7 +59,9 @@ module module_HRLDAS_HYDRO
 
 CONTAINS
 
-    subroutine hrldas_cpl_HYDRO(STC,SMC,SH2OX,infxsrt,sfcheadrt,soldrain,lake_precip,lake_evap,lake_grids,nlakes,ii,jj,kk)
+!Added by Biswas
+    subroutine hrldas_cpl_HYDRO(STC,SMC,SH2OX,infxsrt,sfcheadrt,soldrain,lake_precip,lake_evap,lake_grids,nlakes,ii,jj,kk, &
+               infxsrt_t,soldrain_t)
 
 !---lpr added 2015-07-30---------
 #ifdef WRF_HYDRO_RAPID
@@ -75,6 +77,9 @@ CONTAINS
        integer :: nlakes
        real,dimension(ii,jj,kk) :: STC,SMC,SH2OX
        real,dimension(ii,jj) ::infxsrt,sfcheadrt, soldrain, qsgw
+!Added by Biswas
+       real,dimension(ii,jj) ::infxsrt_t,soldrain_t
+
        real,dimension(nlakes) ::lake_precip,lake_evap
        integer,dimension(nlakes) ::lake_grids
 
@@ -179,6 +184,10 @@ CONTAINS
            RT_DOMAIN(did)%SH2OX = SH2OX
            RT_DOMAIN(did)%infxsrt = infxsrt
            RT_DOMAIN(did)%soldrain = soldrain
+!Added by Biswas
+           RT_DOMAIN(did)%infxsrt_t = infxsrt_t
+           RT_DOMAIN(did)%soldrain_t = soldrain_t
+
            RT_DOMAIN(did)%lake_precip = lake_precip
            RT_DOMAIN(did)%lake_evap = lake_evap
         end if
@@ -221,7 +230,9 @@ CONTAINS
 
      end subroutine hrldas_cpl_HYDRO
 
-    subroutine hrldas_cpl_HYDRO_ini(STC,SMC,SH2OX,infxsrt,sfcheadrt,soldrain,nlakes,ii,jj,kk,kt,dt, olddate,zsoil)
+!Added by Biswas
+    subroutine hrldas_cpl_HYDRO_ini(STC,SMC,SH2OX,infxsrt,sfcheadrt,soldrain,nlakes,ii,jj,kk,kt,dt, olddate,zsoil, &
+       infxsrt_t,soldrain_t)
 
 
        implicit none
@@ -231,6 +242,9 @@ CONTAINS
        real :: dt
        real,dimension(ii,jj,kk) :: STC,SMC,SH2OX
        real,dimension(ii,jj) ::infxsrt,sfcheadrt, soldrain
+!Added by Biswas
+       real,dimension(ii,jj) ::infxsrt_t, soldrain_t
+
        integer :: nlakes
        real, dimension(kk) :: zsoil
        character(len = *) :: olddate

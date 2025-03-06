@@ -296,6 +296,11 @@ CONTAINS
             rt_domain(did)%LKSAT    = 0.0
   allocate( rt_domain(did)%SOLDRAIN   (IX,JX) )
             rt_domain(did)%SOLDRAIN    = 0.0
+!Added by Biswas
+  allocate( rt_domain(did)%SOLDRAIN_T   (IX,JX) )
+            rt_domain(did)%SOLDRAIN_T   = 0.0
+  allocate( rt_domain(did)%INFXSRT_T  (IX,JX) )
+            rt_domain(did)%INFXSRT_T   = 0.0
 
   allocate( rt_domain(did)%NEXP   (IX,JX) )
             rt_domain(did)%NEXP    = 1.0

@@ -47,6 +47,9 @@ module module_NoahMP_hrldas_driver
 
 #ifdef WRF_HYDRO
    REAL,    allocatable, DIMENSION(:,:)   :: infxsrt,sfcheadrt, soldrain
+!Added biswas Biswas- assigned temperature 
+   REAL,    allocatable, DIMENSION(:,:)   :: infxsrt_t, soldrain_t
+
    !LRK - Remove HRLDAS_ini_typ for WRF-Hydro
    integer :: forc_typ, snow_assim, HRLDAS_ini_typ
    !integer :: forc_typ, snow_assim
@@ -1725,11 +1728,18 @@ module module_NoahMP_hrldas_driver
    allocate( etpnd     (ix,jx) )
    allocate( prcp0     (ix,jx) )
 
+!Added by Biswas
+   allocate( infxsrt_t   (ix,jx) )
+   allocate( soldrain_t  (ix,jx) )
+
    prcp0     = 0
    sfcheadrt = 0.0
    infxsrt   = 0.0
    etpnd     = 0.0
    soldrain  = 0.0
+!Added by Biswas
+   soldrain_t  = 0.0
+   infxsrt_t   = 0.0
 
    allocate(zsoil (NSOIL))
    zsoil = 0
@@ -1742,9 +1752,11 @@ module module_NoahMP_hrldas_driver
    print*, "zsoil/soil_thick_input = ", noah_lsm%soil_thick_input(1:NSOIL)
 #endif
 
+!Added by Biswas
    call hrldas_drv_HYDRO_ini(TSLB(:,1:NSOIL,:),SMOIS(:,1:NSOIL,:),SH2O(:,1:NSOIL,:), &
          infxsrt,sfcheadrt,soldrain,nlakes,ix,jx,NSOIL, SMOIS,real(noah_lsm%noah_timestep),          &
-         olddate,zsoil(1:NSOIL))
+         olddate,zsoil(1:NSOIL),                                        &
+         infxsrt_t,soldrain_t)
 
 
 call get_iocflag(1, io_config_outputs)
@@ -1908,8 +1920,10 @@ end subroutine land_driver_ini
 #ifdef WRF_HYDRO
       if(forc_typ .eq. 8) then
           call read_forc_ldasout(olddate,hgrid, noah_lsm%indir, dtbl,ix,jx,infxsrt,soldrain)
+!Added by Biswas
           call hrldas_drv_HYDRO(TSLB(:,1:NSOIL,:),SMOIS(:,1:NSOIL,:),SH2O(:,1:NSOIL,:),infxsrt,sfcheadrt,soldrain, &
-            lake_precip,lake_evap,lake_grids,nlakes, ix,jx,NSOIL)
+            lake_precip,lake_evap,lake_grids,nlakes, ix,jx,NSOIL,                                                  &
+            infxsrt_t,soldrain_t)
           call geth_newdate(newdate, olddate, nint(dtbl))
           olddate = newdate
           return
@@ -1924,8 +1938,10 @@ end subroutine land_driver_ini
           call getNameList('igrid', igrid_hydro)  !! get hydro namelist info :: case sensitive
           write(hgrid_hydro,'(I1)') igrid_hydro
           call read_channel_only(olddate, hgrid_hydro, noah_lsm%indir, noah_lsm%forcing_timestep)
+!Added by Biswas
           call hrldas_drv_HYDRO(TSLB(:,1:NSOIL,:),SMOIS(:,1:NSOIL,:),SH2O(:,1:NSOIL,:),infxsrt,sfcheadrt,soldrain, &
-            lake_precip,lake_evap,lake_grids,nlakes, ix,jx,NSOIL)
+            lake_precip,lake_evap,lake_grids,nlakes, ix,jx,NSOIL,       &
+            infxsrt_t,soldrain_t)
           call geth_newdate(newdate, olddate, nint(dtbl))
           olddate = newdate
           return
@@ -2115,6 +2131,8 @@ RT_DOMAIN(did)%TSLB_temp = TSLB
 #endif
 #ifdef WRF_HYDRO
                  sfcheadrt,INFXSRT,soldrain,                          &    !O
+!Added by Biswas
+                 INFXSRT_t,soldrain_t,                    &    !O
 #endif
                 ids,ide, jds,jde, kds,kde,                      &
                 ims,ime, jms,jme, kms,kme,                      &
@@ -2213,7 +2231,11 @@ RT_DOMAIN(did)%TSLB_temp = TSLB
 #ifdef WRF_HYDRO
      call geth_newdate(newdate, olddate, nint(dtbl))
      olddate = newdate
-     call hrldas_drv_HYDRO(TSLB(:,1:NSOIL,:),SMOIS(:,1:NSOIL,:),SH2O(:,1:NSOIL,:),infxsrt,sfcheadrt,soldrain,lake_precip,lake_evap,lake_grids,nlakes,ix,jx,NSOIL) 
+!Added by Biswas
+     call hrldas_drv_HYDRO(TSLB(:,1:NSOIL,:),SMOIS(:,1:NSOIL,:),SH2O(:,1:NSOIL,:), &
+          infxsrt,sfcheadrt,soldrain,lake_precip,lake_evap,lake_grids,nlakes,ix,jx,&
+          NSOIL,infxsrt_t,soldrain_t)
+
 #endif
 
 ! Output for history
