@@ -617,6 +617,9 @@ if (nlst(did)%GWBASESWCRT        .ne. 0 .or. &
       if(nlst(did)%SUBRTSWCRT .ne. 0 .or. nlst(did)%OVRTSWCRT .ne. 0) then
          call disaggregateDomain_drv(did)
       endif
+!Added by Biswas
+      call TemperatureDisag(RT_DOMAIN(did)%INFXSRT_T, RT_DOMAIN(did)%INFXSRT_T_RT,        &
+           nlst(did)%AGGFACTRT, RT_DOMAIN(did)%ix,RT_DOMAIN(did)%jx)
       if(nlst(did)%OVRTSWCRT .eq. 0) then
          if(nlst(did)%UDMP_OPT .eq. 1) then
             call RunOffDisag(RT_DOMAIN(did)%INFXSRT, RT_DOMAIN(did)%landRunOff,        &
@@ -830,6 +833,8 @@ subroutine driveGwBaseflow(did)
                     RT_DOMAIN(did)%basnsInd, RT_DOMAIN(did)%gw_strm_msk_lind,             &
                     RT_DOMAIN(did)%gwsubbasmsk, RT_DOMAIN(did)%INFXSRT, &
                     RT_DOMAIN(did)%SOLDRAIN, &
+!Added by Biswas
+!                    RT_DOMAIN(did)%SOLDRAIN_T, &
                     RT_DOMAIN(did)%z_gwsubbas,&
                     RT_DOMAIN(did)%qin_gwsubbas,RT_DOMAIN(did)%qout_gwsubbas,&
                     RT_DOMAIN(did)%qinflowbase,&
@@ -1305,6 +1310,29 @@ endif
 
 
       end subroutine aggregateDomain
+!Added by Biswas
+      subroutine TemperatureDisag(runoff1x_in, runoff1x, AGGFACTRT, ix,jx)
+        implicit none
+        real, dimension(:,:) :: runoff1x_in, runoff1x
+        integer :: i,j,ix,jx,AGGFACYRT, AGGFACXRT, AGGFACTRT, IXXRT, JYYRT
+
+        do J=1,JX
+        do I=1,IX
+             do AGGFACYRT=AGGFACTRT-1,0,-1
+             do AGGFACXRT=AGGFACTRT-1,0,-1
+               IXXRT=I*AGGFACTRT-AGGFACXRT
+               JYYRT=J*AGGFACTRT-AGGFACYRT
+#ifdef MPP_LAND
+       if(left_id.ge.0) IXXRT=IXXRT+1
+       if(down_id.ge.0) JYYRT=JYYRT+1
+#endif
+               runoff1x(IXXRT,JYYRT)=runoff1x_in(i,j)
+             enddo
+             enddo
+        enddo
+        enddo
+
+      end subroutine TemperatureDisag
 
       subroutine RunOffDisag(runoff1x_in, runoff1x, area_lsm,cellArea, infxswgt, AGGFACTRT, ix,jx)
         implicit none

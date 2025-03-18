@@ -280,7 +280,7 @@ contains
 !------------------------------------------------------------------------------
 
    subroutine simp_gw_buck(ix,jx,ixrt,jxrt,numbasns,gnumbasns,basns_area,basnsInd,gw_strm_msk_lind,&
-                            gwsubbasmsk, runoff1x_in, runoff2x_in, z_gwsubbas_tmp, qin_gwsubbas,&
+                            gwsubbasmsk, runoff1x_in, runoff2x_in, soldrain_t, z_gwsubbas_tmp, qin_gwsubbas,&
                             qout_gwsubbas,qinflowbase,gw_strm_msk,gwbas_pix_ct,dist,DT,&
                             C,ex,z_mx,GWBASESWCRT,OVRTSWCRT)
    implicit none
@@ -306,6 +306,13 @@ contains
    integer, intent(in),dimension(ixrt,jxrt)          :: gw_strm_msk, gw_strm_msk_lind
    integer, intent(in)                               :: GWBASESWCRT
    integer, intent(in)                               :: OVRTSWCRT
+!Added by Biswas
+   real,    intent(in)                               :: soldrain_t(:, :)
+   real                                              :: old_vol, incoming_vol, new_vol
+   real                                              :: old_temp, incoming_temp
+   real, allocatable                                 :: gw_vol_local(:, :), gw_temp_local(:, :)
+   allocate(gw_vol_local(ix, jx))
+   allocate(gw_temp_local(ix, jx))
 
 
    real*8, dimension(numbasns)                      :: sum_perc8, ct_bas8, sum_perc8_surf
@@ -334,8 +341,49 @@ contains
    runoff2x = runoff2x_in
    runoff1x = runoff1x_in
 
+!Added by Biswas
+   gw_vol_local = z_gwsubbas_tmp
+   gw_temp_local = 0.0
 
+ 
+   !---------------------------------------------------------------------
+   ! Loop over each grid cell and update the groundwater volume and temperature.
+   !---------------------------------------------------------------------
+   do j = 1, jx
+     do i = 1, ix
+       ! Retrieve the existing groundwater volume and temperature
+       old_vol  = gw_vol_local(i, j)
+       old_temp = gw_temp_local(i, j)
+ 
+       ! Determine the incoming water volume.
+       ! We assume that runoff1x_in and runoff2x_in provide the water volume
+       incoming_vol = runoff1x_in(i, j) + runoff2x_in(i, j)
+       
+       ! Retrieve the temperature of the incoming water.
+       incoming_temp = soldrain_t(i, j)
+ 
+       ! Compute the new groundwater volume
+       new_vol = old_vol + incoming_vol
+ 
+       ! Update groundwater temperature using a volume-weighted average:
+       ! new_temp = (old_vol * old_temp + incoming_vol * incoming_temp) / new_vol
+       if (new_vol > 0.0) then
+         gw_temp_local(i, j) = (old_vol * old_temp + incoming_vol * incoming_temp) / new_vol
+       else
+         gw_temp_local(i, j) = old_temp
+       endif
+ 
+       ! Store the updated groundwater volume
+       gw_vol_local(i, j) = new_vol
+     end do
+   end do
 
+   ! Write back the updated groundwater storage.
+   z_gwsubbas_tmp = gw_vol_local
+
+   deallocate(gw_vol_local)
+   deallocate(gw_temp_local)
+!Done by Biswas
 
 !!!Calculate aggregated percolation from deep runoff into GW basins...
    do i=1,ix

@@ -5956,7 +5956,9 @@ end subroutine mpp_output_chrt
           iret = nf90_def_var(ncid, "sfcheadrt", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
 !Added by Biswas
           iret = nf90_def_var(ncid, "infxsrt_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
+          iret = nf90_def_var(ncid, "infxsrt_t_rt", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
           iret = nf90_def_var(ncid, "soldrain_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
+!          iret = nf90_def_var(ncid, "soldrain_t_rt", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
 
        end if  ! neither channel_only nor channelBucket_only
 
@@ -6080,7 +6082,9 @@ if( nlst(did)%channel_only       .eq. 0 .and. &
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%overland%control%surface_water_head_lsm,"sfcheadrt"  )
 !Added by Biswas
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%INFXSRT_T,"infxsrt_t"  )
+   call w_rst_nc2(ncid,rt_domain(did)%ixrt,rt_domain(did)%jxrt,rt_domain(did)%INFXSRT_T_RT,"infxsrt_t_rt"  )
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%soldrain_t,"soldrain_t"  )
+!   call w_rst_nc2(ncid,rt_domain(did)%ixrt,rt_domain(did)%jxrt,rt_domain(did)%soldrain_t_rt,"soldrain_t_rt"  )
 
 end if ! neither channel_only nor channelBucket_only
 

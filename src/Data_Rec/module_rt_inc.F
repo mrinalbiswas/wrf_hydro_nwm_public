@@ -78,6 +78,7 @@ module module_rt_inc
   REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT,LKSAT,LKSATRT
 !Added by Biswas
   REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT_T
+  REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT_T_RT
 
   !REAL,    allocatable, DIMENSION(:,:)      :: SFCHEADSUBRT,INFXSUBRT,LKSATFAC  ! SFCHEADSUBRT, INFXSUBRT moved to overland control module
   REAL,    allocatable, DIMENSION(:,:)      :: LKSATFAC

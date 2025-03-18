@@ -299,8 +299,12 @@ CONTAINS
 !Added by Biswas
   allocate( rt_domain(did)%SOLDRAIN_T   (IX,JX) )
             rt_domain(did)%SOLDRAIN_T   = 0.0
+!  allocate( rt_domain(did)%SOLDRAIN_T_RT  = (IXRT,JXRT) )
+!            rt_domain(did)%SOLDRAIN_T_RT  = 0.0
   allocate( rt_domain(did)%INFXSRT_T  (IX,JX) )
             rt_domain(did)%INFXSRT_T   = 0.0
+  allocate( rt_domain(did)%INFXSRT_T_RT  (IXRT,JXRT) )
+            rt_domain(did)%INFXSRT_T_RT   = 0.0
 
   allocate( rt_domain(did)%NEXP   (IX,JX) )
             rt_domain(did)%NEXP    = 1.0
@@ -1915,6 +1919,8 @@ subroutine LandRT_ini(did)
      rt_domain(did)%STRM_CT = 0
      rt_domain(did)%SOLDRAIN = 0.0
      rt_domain(did)%qinflowbase = 0.0
+!Added by Biswas
+!     rt_domain(did)%INFXSRT_T_RT = 0.0
 
    !  rt_domain(did)%BASIN_MSK = 1
    ! !DJG Initialize mass balance check variables...
