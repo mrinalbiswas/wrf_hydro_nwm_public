@@ -308,12 +308,11 @@ contains
    integer, intent(in)                               :: OVRTSWCRT
 !Added by Biswas
    real,    intent(in)                               :: soldrain_t(:, :)
-   real                                              :: old_vol, incoming_vol, new_vol
-   real                                              :: old_temp, incoming_temp
-   real, allocatable                                 :: gw_vol_local(:, :), gw_temp_local(:, :)
-   allocate(gw_vol_local(ix, jx))
-   allocate(gw_temp_local(ix, jx))
-
+   real,    intent(out)                              :: runoff2x_T(:, :)
+   real,    intent(out)                              :: qinflowbase_T(:, :)
+   real,    intent(out)                              :: sum_perc_T(numbasns)
+   real,    intent(out)                              :: z_gwsubbas_T(numbasns)
+   real,    intent(out)                              :: qout_gwsubbas_T(numbasns)
 
    real*8, dimension(numbasns)                      :: sum_perc8, ct_bas8, sum_perc8_surf
    real, dimension(numbasns)                        :: sum_perc, sum_perc_surf
@@ -342,49 +341,8 @@ contains
    runoff1x = runoff1x_in
 
 !Added by Biswas
-   gw_vol_local = z_gwsubbas_tmp
-   gw_temp_local = 0.0
 
  
-   !---------------------------------------------------------------------
-   ! Loop over each grid cell and update the groundwater volume and temperature.
-   !---------------------------------------------------------------------
-   do j = 1, jx
-     do i = 1, ix
-       ! Retrieve the existing groundwater volume and temperature
-       old_vol  = gw_vol_local(i, j)
-       old_temp = gw_temp_local(i, j)
- 
-       ! Determine the incoming water volume.
-       ! We assume that runoff1x_in and runoff2x_in provide the water volume
-       incoming_vol = runoff1x_in(i, j) + runoff2x_in(i, j)
-       
-       ! Retrieve the temperature of the incoming water.
-       incoming_temp = soldrain_t(i, j)
- 
-       ! Compute the new groundwater volume
-       new_vol = old_vol + incoming_vol
- 
-       ! Update groundwater temperature using a volume-weighted average:
-       ! new_temp = (old_vol * old_temp + incoming_vol * incoming_temp) / new_vol
-       if (new_vol > 0.0) then
-         gw_temp_local(i, j) = (old_vol * old_temp + incoming_vol * incoming_temp) / new_vol
-       else
-         gw_temp_local(i, j) = old_temp
-       endif
- 
-       ! Store the updated groundwater volume
-       gw_vol_local(i, j) = new_vol
-     end do
-   end do
-
-   ! Write back the updated groundwater storage.
-   z_gwsubbas_tmp = gw_vol_local
-
-   deallocate(gw_vol_local)
-   deallocate(gw_temp_local)
-!Done by Biswas
-
 !!!Calculate aggregated percolation from deep runoff into GW basins...
    do i=1,ix
      do j=1,jx
@@ -405,6 +363,9 @@ contains
              sum_perc8_surf(bas) = sum_perc8_surf(bas)+runoff1x(i,j)
            end if
            sum_perc8(bas) = sum_perc8(bas)+runoff2x(i,j)  !Add only drainage to bucket...runoff2x in (mm)
+!Added by Biswas
+           sum_perc8_T(bas) = (sum_perc8(bas)*sum_perc8_T(bas) + runoff2x(i,j)*runoff2x_T(i,j)) &
+                              / (sum_perc8(bas)+runoff2x(i,j))
            ct_bas8(bas) = ct_bas8(bas) + 1
          end if
        end do
@@ -415,10 +376,14 @@ contains
     call gw_sum_real(sum_perc8,numbasns,gnumbasns,basnsInd)
     call gw_sum_real(sum_perc8_surf,numbasns,gnumbasns,basnsInd)
     call gw_sum_real(ct_bas8,numbasns,gnumbasns,basnsInd)
+!Added by Biswas
+    call gw_sum_real(sum_perc8_T,numbasns,gnumbasns,basnsInd)
 #endif
    sum_perc = sum_perc8
    sum_perc_surf = sum_perc8_surf
    ct_bas = ct_bas8
+!Added by Biswas
+   sum_perc_T = sum_perc8_T
 
 
 
@@ -447,6 +412,11 @@ contains
 
      z_gwsubbas(bas) = z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( &
                        ct_bas(bas)*basns_area(bas))*1000.   !  units (mm)
+!Added by Biswas
+     z_gwsubbas_T(bas) = (z_gwsubbas(bas)*z_gwsubbas_T(bas) + (qin_gwsubbas(bas)*DT &
+                        /( & ct_bas(bas)*basns_area(bas)) * sum_perc_T(bas)) &
+                        / (z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( & ct_bas(bas)*basns_area(bas)))
+
 
 
 
@@ -487,6 +457,8 @@ contains
 
 !DJG...debug...     write (6,*) "DJG-exp bucket...during",C(bas),ex(bas),z_gwsubbas(bas),qin_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas), qout_gwsubbas(bas), qout_max, qout_spill
 
+!Added by Biswas
+     qout_gwsubbas_T(bas) = z_gwsubbas_T(bas)
 
 
      elseif (GWBASESWCRT.eq.2) then  !Pass through/steady-state bucket
@@ -512,7 +484,8 @@ contains
 !DJG...Combine calculated bucket discharge and amount spilled from bucket...
 !ADCHANGE: Add in surface runoff as direct pass-through
      qout_gwsubbas(bas) = qout_gwsubbas(bas) + qout_spill + qin_gwsubbas_surf(bas)  ! units (cms)
-
+!Added by Biswas
+     qout_gwsubbas_T(bas) = z_gwsubbas_T(bas)
 
 !DJG...debug     write (6,*) "DJG...after",C(bas),ex(bas),z_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas), qout_gwsubbas(bas), qout_spill
 !DJG...debug     write (6,*) "DJG...after...calc",bas,ct_bas(bas),ct_bas(bas)*basns_area(bas),basns_area(bas),DT
@@ -540,6 +513,8 @@ contains
 
              qinflowbase(i,j) = qout_gwsubbas(gw_strm_msk_lind(i,j))*1000.*DT/ &
                 gwbas_pix_ct(gw_strm_msk_lind(i,j))/dist(i,j,9)     ! units (mm) that gets passed into chan routing as stream inflow
+!Added by Biswas
+             qinflowbase_T(i,j) = qout_gwsubbas_T(gw_strm_msk_lind(i,j))
 
            end if
         end do
