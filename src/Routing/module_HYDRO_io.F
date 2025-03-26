@@ -10190,6 +10190,9 @@ end subroutine output_chrt2
 
 #ifdef MPP_LAND
        real, allocatable, dimension(:) :: g_qin_gwsubbas, g_qout_gwsubbas, g_z_gwsubbas
+!Added by Biswas
+       real, allocatable, dimension(:) :: g_qout_gwsubbas_t, g_z_gwsubbas_t
+
        integer(kind=int64), allocatable, dimension(:) :: g_basnsInd
        if(my_id .eq. io_id) then
           if(nlst(did)%GWBASESWCRT.EQ.1 .OR. nlst(did)%GWBASESWCRT.GE.4) then
@@ -10197,11 +10200,19 @@ end subroutine output_chrt2
                allocate(g_qout_gwsubbas(rt_domain(did)%gnumbasns))
                allocate(g_z_gwsubbas(rt_domain(did)%gnumbasns))
                allocate(g_basnsInd(rt_domain(did)%gnumbasns))
+!Added by Biswas
+               allocate(g_qout_gwsubbas_t(rt_domain(did)%gnumbasns))
+               allocate(g_z_gwsubbas_t(rt_domain(did)%gnumbasns))
+
                gnbasns = rt_domain(did)%gnumbasns
           else
                allocate(g_qin_gwsubbas(rt_domain(did)%gnlinksl))
                allocate(g_qout_gwsubbas(rt_domain(did)%gnlinksl))
                allocate(g_z_gwsubbas(rt_domain(did)%gnlinksl))
+!Added by Biswas
+               allocate(g_qout_gwsubbas_t(rt_domain(did)%gnumbasns))
+               allocate(g_z_gwsubbas_t(rt_domain(did)%gnumbasns))
+
                allocate(g_basnsInd(rt_domain(did)%gnlinksl))
                gnbasns = rt_domain(did)%gnlinksl
           endif
@@ -10223,9 +10234,9 @@ end subroutine output_chrt2
                  rt_domain(did)%basnsInd,g_basnsInd)
 !Added by Biswas
           call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%z_gwsubbas_t,  &
-                 rt_domain(did)%basnsInd,z_gwsubbas_t)
+                 rt_domain(did)%basnsInd,g_z_gwsubbas_t)
           call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%qout_gwsubbas_t,  &
-                 rt_domain(did)%basnsInd,qout_gwsubbas_t)
+                 rt_domain(did)%basnsInd,g_qout_gwsubbas_t)
        endif
        if(my_id .eq. io_id) then
 !          open (unit=51,file='GW_inflow.txt',form='formatted',&
