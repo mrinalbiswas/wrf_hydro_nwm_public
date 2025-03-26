@@ -310,9 +310,9 @@ contains
    integer, intent(in)                               :: OVRTSWCRT
 !Added by Biswas
    real,    intent(in)                               :: soldrain_t(:, :)
-   real,    intent(out)                              :: runoff2x_T(:, :)
+   real                                              :: runoff2x_T(:, :)
    real,    intent(out)                              :: qinflowbase_T(:, :)
-   real,    intent(out)                              :: sum_perc_T(numbasns)
+   real                                              :: sum_perc_T(numbasns)
    real,    intent(out)                              :: z_gwsubbas_T(numbasns)
    real,    intent(out)                              :: qout_gwsubbas_T(numbasns)
 
