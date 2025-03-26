@@ -10223,9 +10223,9 @@ end subroutine output_chrt2
                  rt_domain(did)%basnsInd,g_basnsInd)
 !Added by Biswas
           call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%z_gwsubbas_t,  &
-                 rt_domain(did)%basnsInd,g_z_gwsubbas_t)
+                 rt_domain(did)%basnsInd,z_gwsubbas_t)
           call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%qout_gwsubbas_t,  &
-                 rt_domain(did)%basnsInd,g_qout_gwsubbas_t)
+                 rt_domain(did)%basnsInd,qout_gwsubbas_t)
        endif
        if(my_id .eq. io_id) then
 !          open (unit=51,file='GW_inflow.txt',form='formatted',&
