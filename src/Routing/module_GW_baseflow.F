@@ -280,7 +280,9 @@ contains
 !------------------------------------------------------------------------------
 
    subroutine simp_gw_buck(ix,jx,ixrt,jxrt,numbasns,gnumbasns,basns_area,basnsInd,gw_strm_msk_lind,&
-                            gwsubbasmsk, runoff1x_in, runoff2x_in, soldrain_t, z_gwsubbas_tmp, qin_gwsubbas,&
+                            gwsubbasmsk, runoff1x_in, runoff2x_in, soldrain_t, &
+                            z_gwsubbas_t, qout_gwsubbas_t, qinflowbase_t, & 
+                            z_gwsubbas_tmp, qin_gwsubbas,                 &
                             qout_gwsubbas,qinflowbase,gw_strm_msk,gwbas_pix_ct,dist,DT,&
                             C,ex,z_mx,GWBASESWCRT,OVRTSWCRT)
    implicit none
@@ -340,6 +342,7 @@ contains
    z_gwsubbas_T = 0.
    qout_gwsubbas_T = 0.
    qinflowbase_T = 0.
+   runoff2x_T = soldrain_T
 
 !Assign local value of runoff2 (drainage) for flux caluclation to buckets...
    runoff2x = runoff2x_in
