@@ -834,7 +834,11 @@ subroutine driveGwBaseflow(did)
                     RT_DOMAIN(did)%gwsubbasmsk, RT_DOMAIN(did)%INFXSRT, &
                     RT_DOMAIN(did)%SOLDRAIN, &
 !Added by Biswas
-!                    RT_DOMAIN(did)%SOLDRAIN_T, &
+                    RT_DOMAIN(did)%SOLDRAIN_T, &
+                    RT_DOMAIN(did)%z_gwsubbas_T, &
+                    RT_DOMAIN(did)%qout_gwsubbas_T, &
+                    RT_DOMAIN(did)%qinflowbase_T, &
+
                     RT_DOMAIN(did)%z_gwsubbas,&
                     RT_DOMAIN(did)%qin_gwsubbas,RT_DOMAIN(did)%qout_gwsubbas,&
                     RT_DOMAIN(did)%qinflowbase,&

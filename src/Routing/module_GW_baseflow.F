@@ -335,12 +335,16 @@ contains
    qin_gwsubbas = 0.
    qin_gwsubbas_surf = 0.
    z_gwsubbas = z_gwsubbas_tmp
+!Added by Biswas
+   sum_perc8_T = 0.
+   z_gwsubbas_T = 0.
+   qout_gwsubbas_T = 0.
+   qinflowbase_T = 0.
 
 !Assign local value of runoff2 (drainage) for flux caluclation to buckets...
    runoff2x = runoff2x_in
    runoff1x = runoff1x_in
 
-!Added by Biswas
 
  
 !!!Calculate aggregated percolation from deep runoff into GW basins...
@@ -413,9 +417,10 @@ contains
      z_gwsubbas(bas) = z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( &
                        ct_bas(bas)*basns_area(bas))*1000.   !  units (mm)
 !Added by Biswas
-     z_gwsubbas_T(bas) = (z_gwsubbas(bas)*z_gwsubbas_T(bas) + (qin_gwsubbas(bas)*DT &
-                        /( & ct_bas(bas)*basns_area(bas)) * sum_perc_T(bas)) &
-                        / (z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( & ct_bas(bas)*basns_area(bas)))
+     z_gwsubbas_T(bas) = (z_gwsubbas(bas)*z_gwsubbas_T(bas) + qin_gwsubbas(bas)*DT &
+                        /(ct_bas(bas)*basns_area(bas)) * sum_perc_T(bas)) &
+                        /(z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( & 
+                         ct_bas(bas)*basns_area(bas)))
 
 
 
