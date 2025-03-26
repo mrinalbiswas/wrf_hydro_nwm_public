@@ -5958,8 +5958,6 @@ end subroutine mpp_output_chrt
           iret = nf90_def_var(ncid, "infxsrt_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "infxsrt_t_rt", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
           iret = nf90_def_var(ncid, "soldrain_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
-          iret = nf90_def_var(ncid, "z_gwsubbas_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
-          iret = nf90_def_var(ncid, "qout_gwsubbas_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "qinflowbase_t", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
 !          iret = nf90_def_var(ncid, "soldrain_t_rt", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
 
@@ -6087,10 +6085,7 @@ if( nlst(did)%channel_only       .eq. 0 .and. &
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%INFXSRT_T,"infxsrt_t"  )
    call w_rst_rt_nc2(ncid,rt_domain(did)%ixrt,rt_domain(did)%jxrt,rt_domain(did)%INFXSRT_T_RT,"infxsrt_t_rt"  )
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%soldrain_t,"soldrain_t"  )
-   call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%z_gwsubbas_t,"z_gwsubbas_t"  )
-   call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%qout_gwsubbas_t,"qout_gwsubbas_t"  )
    call w_rst_rt_nc2(ncid,rt_domain(did)%ixrt,rt_domain(did)%jxrt,rt_domain(did)%qinflowbase_t,"qinflowbase_t"  )
-!   call w_rst_nc2(ncid,rt_domain(did)%ixrt,rt_domain(did)%jxrt,rt_domain(did)%soldrain_t_rt,"soldrain_t_rt"  )
 
 end if ! neither channel_only nor channelBucket_only
 
@@ -10226,6 +10221,11 @@ end subroutine output_chrt2
                  rt_domain(did)%basnsInd,g_z_gwsubbas)
           call gw_write_io_int(rt_domain(did)%numbasns,rt_domain(did)%basnsInd,  &
                  rt_domain(did)%basnsInd,g_basnsInd)
+!Added by Biswas
+          call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%z_gwsubbas_t,  &
+                 rt_domain(did)%basnsInd,g_z_gwsubbas_t)
+          call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%qout_gwsubbas_t,  &
+                 rt_domain(did)%basnsInd,g_qout_gwsubbas_t)
        endif
        if(my_id .eq. io_id) then
 !          open (unit=51,file='GW_inflow.txt',form='formatted',&
