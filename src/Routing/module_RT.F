@@ -305,9 +305,9 @@ CONTAINS
             rt_domain(did)%INFXSRT_T_RT   = 0.0
   allocate( rt_domain(did)%QINFLOWBASE_T  (IXRT,JXRT) )
             rt_domain(did)%QINFLOWBASE_T  = 0.0
-  allocate( rt_domain(did)%Z_GWSUBBAS_T   (NUMBASNS) )
+  allocate( rt_domain(did)%Z_GWSUBBAS_T   (NLINKS) )
             rt_domain(did)%Z_GWSUBBAS_T   = 0.0
-  allocate( rt_domain(did)%QOUT_GWSUBBAS_T   (NUMBASNS) )
+  allocate( rt_domain(did)%QOUT_GWSUBBAS_T   (NLINKS) )
             rt_domain(did)%QOUT_GWSUBBAS_T   = 0.0
 
   allocate( rt_domain(did)%NEXP   (IX,JX) )
