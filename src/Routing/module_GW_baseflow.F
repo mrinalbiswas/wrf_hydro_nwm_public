@@ -315,6 +315,7 @@ contains
    real                                              :: sum_perc_T(numbasns)
    real,    intent(out)                              :: z_gwsubbas_T(numbasns)
    real,    intent(out)                              :: qout_gwsubbas_T(numbasns)
+   real*8, dimension(numbasns)                       :: sum_perc8_T
 
    real*8, dimension(numbasns)                      :: sum_perc8, ct_bas8, sum_perc8_surf
    real, dimension(numbasns)                        :: sum_perc, sum_perc_surf
