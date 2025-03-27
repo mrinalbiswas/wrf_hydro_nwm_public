@@ -305,10 +305,10 @@ CONTAINS
             rt_domain(did)%INFXSRT_T_RT   = 0.0
   allocate( rt_domain(did)%QINFLOWBASE_T  (IXRT,JXRT) )
             rt_domain(did)%QINFLOWBASE_T  = 0.0
-  allocate( rt_domain(did)%Z_GWSUBBAS_T   (BASNS) )
-            rt_domain(did)%Z_GWSUBBAS_T   = 0.0
-  allocate( rt_domain(did)%QOUT_GWSUBBAS_T   (BASNS) )
-            rt_domain(did)%QOUT_GWSUBBAS_T   = 0.0
+!  allocate( rt_domain(did)%Z_GWSUBBAS_T   (BASNS) )
+!            rt_domain(did)%Z_GWSUBBAS_T   = 0.0
+!  allocate( rt_domain(did)%QOUT_GWSUBBAS_T   (BASNS) )
+!            rt_domain(did)%QOUT_GWSUBBAS_T   = 0.0
 
   allocate( rt_domain(did)%NEXP   (IX,JX) )
             rt_domain(did)%NEXP    = 1.0
@@ -1465,6 +1465,9 @@ subroutine LandRT_ini(did)
            allocate (rt_domain(did)%gw_buck_exp(rt_domain(did)%numbasns))
            allocate (rt_domain(did)%z_max (rt_domain(did)%numbasns))
            allocate (rt_domain(did)%basns_area (rt_domain(did)%numbasns))
+!Added by Biswas
+           allocate (rt_domain(did)%qout_gwsubbas_t (rt_domain(did)%numbasns))
+           allocate (rt_domain(did)%z_gwsubbas_t (rt_domain(did)%numbasns))
 
 #ifdef HYDRO_D
            write(6,*)  "end Simple GW-Bucket ..."
