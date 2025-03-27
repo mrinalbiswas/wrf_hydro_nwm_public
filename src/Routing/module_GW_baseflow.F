@@ -425,7 +425,7 @@ contains
                         /(ct_bas(bas)*basns_area(bas)) * sum_perc_T(bas)) &
                         /(z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( & 
                          ct_bas(bas)*basns_area(bas)))
-
+     print*,"z_gwsubbas_T :", z_gwsubbas_T(bas)
 
 
 
@@ -468,6 +468,7 @@ contains
 
 !Added by Biswas
      qout_gwsubbas_T(bas) = z_gwsubbas_T(bas)
+     print*, "QOUT_GWSUBBAS_T :",qout_gwsubbas_T(bas)
 
 
      elseif (GWBASESWCRT.eq.2) then  !Pass through/steady-state bucket
