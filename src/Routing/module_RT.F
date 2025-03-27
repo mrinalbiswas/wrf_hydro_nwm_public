@@ -305,10 +305,10 @@ CONTAINS
             rt_domain(did)%INFXSRT_T_RT   = 0.0
   allocate( rt_domain(did)%QINFLOWBASE_T  (IXRT,JXRT) )
             rt_domain(did)%QINFLOWBASE_T  = 0.0
-  allocate( rt_domain(did)%Z_GWSUBBAS_T   (BASNS) )
-            rt_domain(did)%Z_GWSUBBAS_T   = 0.0
-  allocate( rt_domain(did)%QOUT_GWSUBBAS_T   (BASNS) )
-            rt_domain(did)%QOUT_GWSUBBAS_T   = 0.0
+!  allocate( rt_domain(did)%Z_GWSUBBAS_T   (BASNS) )
+!            rt_domain(did)%Z_GWSUBBAS_T   = 0.0
+!  allocate( rt_domain(did)%QOUT_GWSUBBAS_T   (BASNS) )
+!            rt_domain(did)%QOUT_GWSUBBAS_T   = 0.0
 
   allocate( rt_domain(did)%NEXP   (IX,JX) )
             rt_domain(did)%NEXP    = 1.0
@@ -1476,6 +1476,8 @@ subroutine LandRT_ini(did)
 
            !Temporary hardwire...
            rt_domain(did)%z_gwsubbas = 1.     ! This gets updated with spun-up GW level in GWBUCKPARM.TBL
+!Added by Biswas
+           rt_domain(did)%z_gwsubbas_t = 0.     ! This gets updated with spun-up GW level in GWBUCKPARM.TBL
 
            call read_GWBUCKPARM(trim(nlst(did)%GWBUCKPARM_file),rt_domain(did)%numbasns,   &
                 rt_domain(did)%gnumbasns, rt_domain(did)%basnsInd, &
