@@ -6028,6 +6028,7 @@ end subroutine mpp_output_chrt
                iret = nf90_def_var(ncid, "z_gwsubbas", NF90_FLOAT, (/dimid_links/), varid)
             else
                iret = nf90_def_var(ncid, "z_gwsubbas", NF90_FLOAT, (/dimid_basns/), varid)
+               iret = nf90_def_var(ncid, "z_gwsubbas_t", NF90_FLOAT, (/dimid_basns/), varid)
             endif
 
          end if ! not channel_only : dont use buckets in channel only runs
