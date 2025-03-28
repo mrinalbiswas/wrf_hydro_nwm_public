@@ -5344,6 +5344,11 @@ subroutine output_gw_NWM(domainId,iGrid)
                                rt_domain(domainId)%basnsInd,g_z_gwsubbas)
          call gw_write_io_int(rt_domain(domainId)%numbasns,rt_domain(domainId)%basnsInd, &
                               rt_domain(domainId)%basnsInd,g_basnsInd)
+!Added by Biswas
+         call gw_write_io_real(rt_domain(domainId)%numbasns,rt_domain(domainId)%qout_gwsubbas_t,  &
+                               rt_domain(domainId)%basnsInd,g_qout_gwsubbas_t)
+         call gw_write_io_real(rt_domain(domainId)%numbasns,rt_domain(domainId)%z_gwsubbas_t,  &
+                               rt_domain(domainId)%basnsInd,g_z_gwsubbas_t)
          if(nlst(domainId)%bucket_loss .eq. 1) then
              fileMeta%outFlag(3) = 1
              call gw_write_io_real(rt_domain(domainId)%numbasns,rt_domain(domainId)%qloss_gwsubbas, &
@@ -5429,6 +5434,9 @@ subroutine output_gw_NWM(domainId,iGrid)
       varOutReal(2,:) = g_qout_gwsubbas
       varOutReal(3,:) = g_qloss_gwsubbas
       varOutReal(4,:) = g_z_gwsubbas
+!Added by Biswas
+      varOutReal(5,:) = g_qout_gwsubbas_t
+      varOutReal(6,:) = g_z_gwsubbas_t
 
       ! Mask out missing values
       where ( varOutReal == fileMeta%modelNdv ) varOutReal = -9999.0
