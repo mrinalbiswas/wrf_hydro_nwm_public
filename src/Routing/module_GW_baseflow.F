@@ -374,6 +374,8 @@ contains
 !Added by Biswas
            sum_perc8_T(bas) = (sum_perc8(bas)*sum_perc8_T(bas) + runoff2x(i,j)*runoff2x_T(i,j)) &
                               / (sum_perc8(bas)+runoff2x(i,j))
+           print*,"sum_perc8_T(bas) :", sum_perc8_T(bas)
+           print*,"runoff2x(i,j) :", runoff2x(i,j)
            ct_bas8(bas) = ct_bas8(bas) + 1
          end if
        end do
