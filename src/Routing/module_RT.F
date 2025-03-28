@@ -1374,9 +1374,6 @@ subroutine LandRT_ini(did)
 
         allocate (rt_domain(did)%z_gwsubbas (rt_domain(did)%numbasns  ))
         allocate (rt_domain(did)%nhdBuckMask(rt_domain(did)%numbasns  ))  ! default is -999
-!Added by Biswas
-        allocate (rt_domain(did)%z_gwsubbas_t (rt_domain(did)%numbasns  ))
-        allocate (rt_domain(did)%qin_gwsubbas_t (rt_domain(did)%numbasns))
 
         allocate (rt_domain(did)%qin_gwsubbas (rt_domain(did)%numbasns))
         allocate (rt_domain(did)%gwbas_pix_ct (rt_domain(did)%numbasns))
