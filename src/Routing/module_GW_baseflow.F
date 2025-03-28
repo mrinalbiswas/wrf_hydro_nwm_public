@@ -476,6 +476,9 @@ contains
 ! Assuming a steady-state (inflow=outflow) model...
 !DJG convert input and output units to cms...       qout_gwsubbas(bas) = qin_gwsubbas(bas)  !steady-state model...(m^3)
        qout_gwsubbas(bas) = qin_gwsubbas(bas)  !steady-state model...(m^3/s)
+!Added by Biswas
+     qout_gwsubbas_T(bas) = z_gwsubbas_T(bas)
+     print*, "QOUT_GWSUBBAS_T WHEN GWBASESWCRT=2 :",qout_gwsubbas_T(bas)
 
 !DJG...debug       write (6,*) "DJG-pass through...during",C(bas),ex(bas),qin_gwsubbas(bas), z_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas), qout_gwsubbas(bas), qout_max
 
