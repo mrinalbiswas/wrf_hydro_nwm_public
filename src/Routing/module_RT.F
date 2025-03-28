@@ -1477,7 +1477,7 @@ subroutine LandRT_ini(did)
            !Temporary hardwire...
            rt_domain(did)%z_gwsubbas = 1.     ! This gets updated with spun-up GW level in GWBUCKPARM.TBL
 !Added by Biswas
-           rt_domain(did)%z_gwsubbas_t = 0.     ! This gets updated with spun-up GW level in GWBUCKPARM.TBL
+           rt_domain(did)%z_gwsubbas_t = 280.     ! This gets updated with spun-up GW level in GWBUCKPARM.TBL
 
            call read_GWBUCKPARM(trim(nlst(did)%GWBUCKPARM_file),rt_domain(did)%numbasns,   &
                 rt_domain(did)%gnumbasns, rt_domain(did)%basnsInd, &
