@@ -340,8 +340,7 @@ contains
    z_gwsubbas = z_gwsubbas_tmp
 !Added by Biswas
    sum_perc8_T = 0.
-!   z_gwsubbas_T = 0.
-   z_gwsubbas_T = soldrain_T
+   z_gwsubbas_T = 0.
    qout_gwsubbas_T = 0.
    qinflowbase_T = 0.
    runoff2x_T = soldrain_T
