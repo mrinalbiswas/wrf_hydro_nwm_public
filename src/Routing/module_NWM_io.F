@@ -5226,6 +5226,8 @@ subroutine output_gw_NWM(domainId,iGrid)
    integer :: gnbasns
    ! Allocatable arrays to hold output variables.
    real, allocatable, dimension(:) :: g_qin_gwsubbas,g_qout_gwsubbas,g_qloss_gwsubbas,g_z_gwsubbas
+!Added by Biswas
+   real, allocatable, dimension(:) :: g_qout_gwsubbas_t,g_z_gwsubbas_t
    integer(kind=int64), allocatable, dimension(:) :: g_basnsInd
    real, allocatable, dimension(:,:) :: varOutReal   ! Array holding output variables in real format
    integer, allocatable, dimension(:) :: varOutInt ! Array holding output variables after
@@ -5308,6 +5310,9 @@ subroutine output_gw_NWM(domainId,iGrid)
          allocate(g_qloss_gwsubbas(rt_domain(domainId)%gnumbasns))
          allocate(g_z_gwsubbas(rt_domain(domainId)%gnumbasns))
          allocate(g_basnsInd(rt_domain(domainId)%gnumbasns))
+!Added by Biswas
+         allocate(g_qout_gwsubbas_t(rt_domain(domainId)%gnumbasns))
+         allocate(g_z_gwsubbas_t(rt_domain(domainId)%gnumbasns))
       else
          allocate(g_qin_gwsubbas(1))
          allocate(g_qout_gwsubbas(1))
