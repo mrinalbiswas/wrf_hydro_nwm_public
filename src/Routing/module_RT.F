@@ -296,7 +296,7 @@ CONTAINS
             rt_domain(did)%LKSAT    = 0.0
   allocate( rt_domain(did)%SOLDRAIN   (IX,JX) )
             rt_domain(did)%SOLDRAIN    = 0.0
-!Added by Biswas
+!MKB
   allocate( rt_domain(did)%SOLDRAIN_T   (IX,JX) )
             rt_domain(did)%SOLDRAIN_T   = 0.0
   allocate( rt_domain(did)%INFXSRT_T  (IX,JX) )
@@ -1461,7 +1461,6 @@ subroutine LandRT_ini(did)
            allocate (rt_domain(did)%gw_buck_exp(rt_domain(did)%numbasns))
            allocate (rt_domain(did)%z_max (rt_domain(did)%numbasns))
            allocate (rt_domain(did)%basns_area (rt_domain(did)%numbasns))
-!Added by Biswas
            allocate (rt_domain(did)%qout_gwsubbas_t (rt_domain(did)%numbasns))
            allocate (rt_domain(did)%z_gwsubbas_t (rt_domain(did)%numbasns))
 
@@ -1472,8 +1471,8 @@ subroutine LandRT_ini(did)
 
            !Temporary hardwire...
            rt_domain(did)%z_gwsubbas = 1.     ! This gets updated with spun-up GW level in GWBUCKPARM.TBL
-!Added by Biswas
-           rt_domain(did)%z_gwsubbas_t = 280.     ! This gets updated with spun-up GW level in GWBUCKPARM.TBL
+!MKB
+           rt_domain(did)%z_gwsubbas_t = 280.     ! Initializing the vars  
 
            call read_GWBUCKPARM(trim(nlst(did)%GWBUCKPARM_file),rt_domain(did)%numbasns,   &
                 rt_domain(did)%gnumbasns, rt_domain(did)%basnsInd, &
@@ -1924,8 +1923,6 @@ subroutine LandRT_ini(did)
      rt_domain(did)%STRM_CT = 0
      rt_domain(did)%SOLDRAIN = 0.0
      rt_domain(did)%qinflowbase = 0.0
-!Added by Biswas
-!     rt_domain(did)%INFXSRT_T_RT = 0.0
 
    !  rt_domain(did)%BASIN_MSK = 1
    ! !DJG Initialize mass balance check variables...

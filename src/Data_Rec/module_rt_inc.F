@@ -76,9 +76,9 @@ module module_rt_inc
   !REAL,    allocatable, DIMENSION(:,:)      :: LKSATRT !  LKSATRT moved to subsurface properties module
   !REAL,    allocatable, DIMENSION(:,:)      :: SFCHEADRT,INFXSRT,LKSAT  ! SFCHEAD moved to overland control module
   REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT,LKSAT,LKSATRT
-!Added by Biswas
-  REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT_T
-  REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT_T_RT
+!MKB
+  REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT_T ! Infliltration excess temperature
+  REAL,    allocatable, DIMENSION(:,:)      :: INFXSRT_T_RT ! Infiltration excess temperature fine grid
 
   !REAL,    allocatable, DIMENSION(:,:)      :: SFCHEADSUBRT,INFXSUBRT,LKSATFAC  ! SFCHEADSUBRT, INFXSUBRT moved to overland control module
   REAL,    allocatable, DIMENSION(:,:)      :: LKSATFAC
@@ -102,8 +102,8 @@ module module_rt_inc
   INTEGER, allocatable, DIMENSION(:,:)   :: GWSUBBASMSK  !GW basin mask grid
   REAL,    allocatable, DIMENSION(:,:)   :: qinflowbase  !strm inflow/baseflow from GW
   REAL,    allocatable, DIMENSION(:,:)   :: SOLDRAIN     !time-step drainage
-!Added by Biswas
-  REAL,    allocatable, DIMENSION(:,:)   :: SOLDRAIN_T   !time-step drainage
+!MKB
+  REAL,    allocatable, DIMENSION(:,:)   :: SOLDRAIN_T   !time-step drainage temperature
   REAL,    allocatable, DIMENSION(:)     :: Z_GWSUBBAS_T   !Temp of water storage in bucket
   REAL,    allocatable, DIMENSION(:)     :: QOUT_GWSUBBAS_T   !Temp of gw outflow 
   REAL,    allocatable, DIMENSION(:,:)   :: QINFLOWBASE_T   !Temp of inflow water to channel cells 

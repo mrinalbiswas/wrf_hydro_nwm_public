@@ -5226,7 +5226,7 @@ subroutine output_gw_NWM(domainId,iGrid)
    integer :: gnbasns
    ! Allocatable arrays to hold output variables.
    real, allocatable, dimension(:) :: g_qin_gwsubbas,g_qout_gwsubbas,g_qloss_gwsubbas,g_z_gwsubbas
-!Added by Biswas
+!MKB
    real, allocatable, dimension(:) :: g_qout_gwsubbas_t,g_z_gwsubbas_t
    integer(kind=int64), allocatable, dimension(:) :: g_basnsInd
    real, allocatable, dimension(:,:) :: varOutReal   ! Array holding output variables in real format
@@ -5310,7 +5310,6 @@ subroutine output_gw_NWM(domainId,iGrid)
          allocate(g_qloss_gwsubbas(rt_domain(domainId)%gnumbasns))
          allocate(g_z_gwsubbas(rt_domain(domainId)%gnumbasns))
          allocate(g_basnsInd(rt_domain(domainId)%gnumbasns))
-!Added by Biswas
          allocate(g_qout_gwsubbas_t(rt_domain(domainId)%gnumbasns))
          allocate(g_z_gwsubbas_t(rt_domain(domainId)%gnumbasns))
       else
@@ -5344,7 +5343,6 @@ subroutine output_gw_NWM(domainId,iGrid)
                                rt_domain(domainId)%basnsInd,g_z_gwsubbas)
          call gw_write_io_int(rt_domain(domainId)%numbasns,rt_domain(domainId)%basnsInd, &
                               rt_domain(domainId)%basnsInd,g_basnsInd)
-!Added by Biswas
          call gw_write_io_real(rt_domain(domainId)%numbasns,rt_domain(domainId)%qout_gwsubbas_t,  &
                                rt_domain(domainId)%basnsInd,g_qout_gwsubbas_t)
          call gw_write_io_real(rt_domain(domainId)%numbasns,rt_domain(domainId)%z_gwsubbas_t,  &
@@ -5434,7 +5432,6 @@ subroutine output_gw_NWM(domainId,iGrid)
       varOutReal(2,:) = g_qout_gwsubbas
       varOutReal(3,:) = g_qloss_gwsubbas
       varOutReal(4,:) = g_z_gwsubbas
-!Added by Biswas
       varOutReal(5,:) = g_qout_gwsubbas_t
       varOutReal(6,:) = g_z_gwsubbas_t
 

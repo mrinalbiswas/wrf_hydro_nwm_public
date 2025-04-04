@@ -308,14 +308,13 @@ contains
    integer, intent(in),dimension(ixrt,jxrt)          :: gw_strm_msk, gw_strm_msk_lind
    integer, intent(in)                               :: GWBASESWCRT
    integer, intent(in)                               :: OVRTSWCRT
-!Added by Biswas
    real,    intent(in),dimension(ix,jx)              :: soldrain_t
-   real, dimension(ix,jx)                  :: runoff2x_T
-   real,    intent(out),dimension(ixrt,jxrt)         :: qinflowbase_T
-   real,   dimension(numbasns)                        :: sum_perc_T
-   real,    intent(inout),dimension(numbasns)        :: z_gwsubbas_T
-   real,    intent(out),dimension(numbasns)          :: qout_gwsubbas_T
-   real*8, dimension(numbasns)                       :: sum_perc8_T
+   real,    dimension(ix,jx)                         :: runoff2x_t
+   real,    intent(out),dimension(ixrt,jxrt)         :: qinflowbase_t
+   real,    dimension(numbasns)                      :: sum_perc_t
+   real,    intent(inout),dimension(numbasns)        :: z_gwsubbas_t
+   real,    intent(out),dimension(numbasns)          :: qout_gwsubbas_t
+   real*8,  dimension(numbasns)                      :: sum_perc8_t
 
    real*8, dimension(numbasns)                      :: sum_perc8, ct_bas8, sum_perc8_surf
    real, dimension(numbasns)                        :: sum_perc, sum_perc_surf
@@ -338,11 +337,10 @@ contains
    qin_gwsubbas = 0.
    qin_gwsubbas_surf = 0.
    z_gwsubbas = z_gwsubbas_tmp
-!Added by Biswas
-   sum_perc8_T = 0.
-   qout_gwsubbas_T = 0.
-   qinflowbase_T = 0.
-   runoff2x_T = soldrain_T
+   sum_perc8_t = 0.
+   qout_gwsubbas_t = 0.
+   qinflowbase_t = 0.
+   runoff2x_t = soldrain_t
 
 !Assign local value of runoff2 (drainage) for flux caluclation to buckets...
    runoff2x = runoff2x_in
@@ -369,16 +367,11 @@ contains
            if(OVRTSWCRT.eq.0) then
              sum_perc8_surf(bas) = sum_perc8_surf(bas)+runoff1x(i,j)
            end if
-!Added by Biswas
-           print*,"sum_perc8(bas) BEFORE:", sum_perc8(bas)
-           sum_perc8_T(bas) = (sum_perc8(bas)*sum_perc8_T(bas) + runoff2x(i,j)*runoff2x_T(i,j)) &
+!MKB calculating temperature associated with sum_perc8
+           sum_perc8_t(bas) = (sum_perc8(bas)*sum_perc8_t(bas) + runoff2x(i,j)*runoff2x_t(i,j)) &
                               / (sum_perc8(bas)+runoff2x(i,j))
-           print*,"sum_perc8_T(bas) :", sum_perc8_T(bas)
-           print*,"runoff2x(i,j) :", runoff2x(i,j)
 
-           print*,"sum_perc8(bas) AFTER:", sum_perc8(bas)
            sum_perc8(bas) = sum_perc8(bas)+runoff2x(i,j)  !Add only drainage to bucket...runoff2x in (mm)
-           print*,"sum_perc8(bas) AFTER CALC:", sum_perc8(bas)
            ct_bas8(bas) = ct_bas8(bas) + 1
          end if
        end do
@@ -389,14 +382,13 @@ contains
     call gw_sum_real(sum_perc8,numbasns,gnumbasns,basnsInd)
     call gw_sum_real(sum_perc8_surf,numbasns,gnumbasns,basnsInd)
     call gw_sum_real(ct_bas8,numbasns,gnumbasns,basnsInd)
-!Added by Biswas
-    call gw_sum_real(sum_perc8_T,numbasns,gnumbasns,basnsInd)
+!MKB
+    call gw_sum_real(sum_perc8_t,numbasns,gnumbasns,basnsInd)
 #endif
    sum_perc = sum_perc8
    sum_perc_surf = sum_perc8_surf
    ct_bas = ct_bas8
-!Added by Biswas
-   sum_perc_T = sum_perc8_T
+   sum_perc_t = sum_perc8_t
 
 
 
@@ -423,13 +415,11 @@ contains
 
 !DJG...debug    write (6,*) "DJG...before",C(bas),ex(bas),z_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas)
 
-!Added by Biswas
-     z_gwsubbas_T(bas) = (z_gwsubbas(bas)*z_gwsubbas_T(bas) + qin_gwsubbas(bas)*DT &
-                        /(ct_bas(bas)*basns_area(bas))*1000. * sum_perc_T(bas)) &
+!MKB calculate the water temp associated with z_gwsubbas - vol aggregation
+     z_gwsubbas_t(bas) = (z_gwsubbas(bas)*z_gwsubbas_t(bas) + qin_gwsubbas(bas)*DT &
+                        /(ct_bas(bas)*basns_area(bas))*1000. * sum_perc_t(bas)) &
                         /(z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( & 
                          ct_bas(bas)*basns_area(bas)))
-     print*,"z_gwsubbas_T :", z_gwsubbas_T(bas), z_gwsubbas(bas), qin_gwsubbas(bas) 
-     print*,"sum_perc_T(bas) calc z_gwsubbas:",sum_perc_T(bas)
 
      z_gwsubbas(bas) = z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( &
                        ct_bas(bas)*basns_area(bas))*1000.   !  units (mm)
@@ -472,10 +462,8 @@ contains
      qout_gwsubbas(bas) = MIN(qout_max,qout_gwsubbas(bas))   ! Limit bucket discharge to max. bucket limit
 
 !DJG...debug...     write (6,*) "DJG-exp bucket...during",C(bas),ex(bas),z_gwsubbas(bas),qin_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas), qout_gwsubbas(bas), qout_max, qout_spill
-
-!Added by Biswas
-     qout_gwsubbas_T(bas) = z_gwsubbas_T(bas)
-     print*, "QOUT_GWSUBBAS_T :",qout_gwsubbas_T(bas)
+     
+     qout_gwsubbas_t(bas) = z_gwsubbas_t(bas)
 
 
      elseif (GWBASESWCRT.eq.2) then  !Pass through/steady-state bucket
@@ -483,9 +471,8 @@ contains
 ! Assuming a steady-state (inflow=outflow) model...
 !DJG convert input and output units to cms...       qout_gwsubbas(bas) = qin_gwsubbas(bas)  !steady-state model...(m^3)
        qout_gwsubbas(bas) = qin_gwsubbas(bas)  !steady-state model...(m^3/s)
-!Added by Biswas
-     qout_gwsubbas_T(bas) = z_gwsubbas_T(bas)
-     print*, "QOUT_GWSUBBAS_T WHEN GWBASESWCRT=2 :",qout_gwsubbas_T(bas)
+!MKB
+     qout_gwsubbas_t(bas) = z_gwsubbas_t(bas)
 
 !DJG...debug       write (6,*) "DJG-pass through...during",C(bas),ex(bas),qin_gwsubbas(bas), z_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas), qout_gwsubbas(bas), qout_max
 
@@ -504,9 +491,8 @@ contains
 !DJG...Combine calculated bucket discharge and amount spilled from bucket...
 !ADCHANGE: Add in surface runoff as direct pass-through
      qout_gwsubbas(bas) = qout_gwsubbas(bas) + qout_spill + qin_gwsubbas_surf(bas)  ! units (cms)
-!Added by Biswas
-     qout_gwsubbas_T(bas) = z_gwsubbas_T(bas)
-     print*,"qout_gwsubbas_T(bas) :", qout_gwsubbas_T(bas)
+!MKB
+     qout_gwsubbas_t(bas) = z_gwsubbas_t(bas)
 
 !DJG...debug     write (6,*) "DJG...after",C(bas),ex(bas),z_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas), qout_gwsubbas(bas), qout_spill
 !DJG...debug     write (6,*) "DJG...after...calc",bas,ct_bas(bas),ct_bas(bas)*basns_area(bas),basns_area(bas),DT
@@ -534,9 +520,8 @@ contains
 
              qinflowbase(i,j) = qout_gwsubbas(gw_strm_msk_lind(i,j))*1000.*DT/ &
                 gwbas_pix_ct(gw_strm_msk_lind(i,j))/dist(i,j,9)     ! units (mm) that gets passed into chan routing as stream inflow
-!Added by Biswas
-             qinflowbase_T(i,j) = qout_gwsubbas_T(gw_strm_msk_lind(i,j))
-             print*,"qinflowbase_T(i,j) :", qinflowbase_T(i,j)
+!MKB
+             qinflowbase_t(i,j) = qout_gwsubbas_t(gw_strm_msk_lind(i,j))
 
            end if
         end do

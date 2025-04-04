@@ -617,7 +617,7 @@ if (nlst(did)%GWBASESWCRT        .ne. 0 .or. &
       if(nlst(did)%SUBRTSWCRT .ne. 0 .or. nlst(did)%OVRTSWCRT .ne. 0) then
          call disaggregateDomain_drv(did)
       endif
-!Added by Biswas
+!MKB 
       call TemperatureDisag(RT_DOMAIN(did)%INFXSRT_T, RT_DOMAIN(did)%INFXSRT_T_RT,        &
            nlst(did)%AGGFACTRT, RT_DOMAIN(did)%ix,RT_DOMAIN(did)%jx)
       if(nlst(did)%OVRTSWCRT .eq. 0) then
@@ -833,11 +833,11 @@ subroutine driveGwBaseflow(did)
                     RT_DOMAIN(did)%basnsInd, RT_DOMAIN(did)%gw_strm_msk_lind,             &
                     RT_DOMAIN(did)%gwsubbasmsk, RT_DOMAIN(did)%INFXSRT, &
                     RT_DOMAIN(did)%SOLDRAIN, &
-!Added by Biswas
+!MKB
                     RT_DOMAIN(did)%SOLDRAIN_T, &
-                    RT_DOMAIN(did)%z_gwsubbas_T, &
-                    RT_DOMAIN(did)%qout_gwsubbas_T, &
-                    RT_DOMAIN(did)%qinflowbase_T, &
+                    RT_DOMAIN(did)%z_gwsubbas_t, &
+                    RT_DOMAIN(did)%qout_gwsubbas_t, &
+                    RT_DOMAIN(did)%qinflowbase_t, &
 
                     RT_DOMAIN(did)%z_gwsubbas,&
                     RT_DOMAIN(did)%qin_gwsubbas,RT_DOMAIN(did)%qout_gwsubbas,&
@@ -1314,7 +1314,7 @@ endif
 
 
       end subroutine aggregateDomain
-!Added by Biswas
+!MKB Adding Temperature Disaggregation - mapping to high res dom
       subroutine TemperatureDisag(runoff1x_in, runoff1x, AGGFACTRT, ix,jx)
         implicit none
         real, dimension(:,:) :: runoff1x_in, runoff1x

@@ -5954,12 +5954,11 @@ end subroutine mpp_output_chrt
           iret = nf90_def_var(ncid, "infxsrt", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "soldrain", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "sfcheadrt", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
-!Added by Biswas
+!MKB adding the temp vars to the netcdf restart files
           iret = nf90_def_var(ncid, "infxsrt_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "infxsrt_t_rt", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
           iret = nf90_def_var(ncid, "soldrain_t", NF90_FLOAT, (/dimid_ix,dimid_jx/), varid)
           iret = nf90_def_var(ncid, "qinflowbase_t", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
-!          iret = nf90_def_var(ncid, "soldrain_t_rt", NF90_FLOAT, (/dimid_ixrt,dimid_jxrt/), varid)
 
        end if  ! neither channel_only nor channelBucket_only
 
@@ -6082,7 +6081,7 @@ if( nlst(did)%channel_only       .eq. 0 .and. &
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%INFXSRT,"infxsrt"  )
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%soldrain,"soldrain"  )
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%overland%control%surface_water_head_lsm,"sfcheadrt"  )
-!Added by Biswas
+!MKB
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%INFXSRT_T,"infxsrt_t"  )
    call w_rst_rt_nc2(ncid,rt_domain(did)%ixrt,rt_domain(did)%jxrt,rt_domain(did)%INFXSRT_T_RT,"infxsrt_t_rt"  )
    call w_rst_nc2(ncid,rt_domain(did)%ix,rt_domain(did)%jx,rt_domain(did)%soldrain_t,"soldrain_t"  )
@@ -6252,6 +6251,9 @@ if(nlst(did)%SUBRTSWCRT  .eq. 1 .or. &
          else
             call w_rst_gwbucket_real(ncid,rt_domain(did)%numbasns,rt_domain(did)%gnumbasns, &
                  rt_domain(did)%basnsInd, rt_domain(did)%z_gwsubbas,"z_gwsubbas" )
+!MKB
+            call w_rst_gwbucket_real(ncid,rt_domain(did)%numbasns,rt_domain(did)%gnumbasns, &
+                 rt_domain(did)%basnsInd, rt_domain(did)%z_gwsubbas_t,"z_gwsubbas_t" )
          endif
 
       end if ! not channel_only : dont use buckets in channel only runs
@@ -6963,7 +6965,7 @@ if(nlst(did)%SUBRTSWCRT  .eq. 1 .or. &
          else
             call read_rst_gwbucket_real(ncid,rt_domain(did)%z_gwsubbas,rt_domain(did)%numbasns,&
                  rt_domain(did)%gnumbasns,rt_domain(did)%basnsInd, "z_gwsubbas")
-!Added by Biswas
+!MKB
             call read_rst_gwbucket_real(ncid,rt_domain(did)%z_gwsubbas_t,rt_domain(did)%numbasns,&
                  rt_domain(did)%gnumbasns,rt_domain(did)%basnsInd, "z_gwsubbas_t")
          endif
@@ -10194,7 +10196,7 @@ end subroutine output_chrt2
 
 #ifdef MPP_LAND
        real, allocatable, dimension(:) :: g_qin_gwsubbas, g_qout_gwsubbas, g_z_gwsubbas
-!Added by Biswas
+!MKB adding global temp 
        real, allocatable, dimension(:) :: g_qout_gwsubbas_t, g_z_gwsubbas_t
 
        integer(kind=int64), allocatable, dimension(:) :: g_basnsInd
@@ -10204,7 +10206,6 @@ end subroutine output_chrt2
                allocate(g_qout_gwsubbas(rt_domain(did)%gnumbasns))
                allocate(g_z_gwsubbas(rt_domain(did)%gnumbasns))
                allocate(g_basnsInd(rt_domain(did)%gnumbasns))
-!Added by Biswas
                allocate(g_qout_gwsubbas_t(rt_domain(did)%gnumbasns))
                allocate(g_z_gwsubbas_t(rt_domain(did)%gnumbasns))
 
@@ -10213,7 +10214,6 @@ end subroutine output_chrt2
                allocate(g_qin_gwsubbas(rt_domain(did)%gnlinksl))
                allocate(g_qout_gwsubbas(rt_domain(did)%gnlinksl))
                allocate(g_z_gwsubbas(rt_domain(did)%gnlinksl))
-!Added by Biswas
                allocate(g_qout_gwsubbas_t(rt_domain(did)%gnumbasns))
                allocate(g_z_gwsubbas_t(rt_domain(did)%gnumbasns))
 
@@ -10236,7 +10236,6 @@ end subroutine output_chrt2
                  rt_domain(did)%basnsInd,g_z_gwsubbas)
           call gw_write_io_int(rt_domain(did)%numbasns,rt_domain(did)%basnsInd,  &
                  rt_domain(did)%basnsInd,g_basnsInd)
-!Added by Biswas
           call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%z_gwsubbas_t,  &
                  rt_domain(did)%basnsInd,g_z_gwsubbas_t)
           call gw_write_io_real(rt_domain(did)%numbasns,rt_domain(did)%qout_gwsubbas_t,  &
