@@ -6963,6 +6963,9 @@ if(nlst(did)%SUBRTSWCRT  .eq. 1 .or. &
          else
             call read_rst_gwbucket_real(ncid,rt_domain(did)%z_gwsubbas,rt_domain(did)%numbasns,&
                  rt_domain(did)%gnumbasns,rt_domain(did)%basnsInd, "z_gwsubbas")
+!Added by Biswas
+            call read_rst_gwbucket_real(ncid,rt_domain(did)%z_gwsubbas_t,rt_domain(did)%numbasns,&
+                 rt_domain(did)%gnumbasns,rt_domain(did)%basnsInd, "z_gwsubbas_t")
          endif
 
       end if !       if( nlst_rt(did)%channel_only .eq. 0 ) then

@@ -369,12 +369,16 @@ contains
            if(OVRTSWCRT.eq.0) then
              sum_perc8_surf(bas) = sum_perc8_surf(bas)+runoff1x(i,j)
            end if
-           sum_perc8(bas) = sum_perc8(bas)+runoff2x(i,j)  !Add only drainage to bucket...runoff2x in (mm)
 !Added by Biswas
+           print*,"sum_perc8(bas) BEFORE:", sum_perc8(bas)
            sum_perc8_T(bas) = (sum_perc8(bas)*sum_perc8_T(bas) + runoff2x(i,j)*runoff2x_T(i,j)) &
                               / (sum_perc8(bas)+runoff2x(i,j))
            print*,"sum_perc8_T(bas) :", sum_perc8_T(bas)
            print*,"runoff2x(i,j) :", runoff2x(i,j)
+
+           print*,"sum_perc8(bas) AFTER:", sum_perc8(bas)
+           sum_perc8(bas) = sum_perc8(bas)+runoff2x(i,j)  !Add only drainage to bucket...runoff2x in (mm)
+           print*,"sum_perc8(bas) AFTER CALC:", sum_perc8(bas)
            ct_bas8(bas) = ct_bas8(bas) + 1
          end if
        end do
@@ -419,15 +423,16 @@ contains
 
 !DJG...debug    write (6,*) "DJG...before",C(bas),ex(bas),z_gwsubbas(bas),z_mx(bas),z_gwsubbas(bas)/z_mx(bas)
 
-     z_gwsubbas(bas) = z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( &
-                       ct_bas(bas)*basns_area(bas))*1000.   !  units (mm)
 !Added by Biswas
      z_gwsubbas_T(bas) = (z_gwsubbas(bas)*z_gwsubbas_T(bas) + qin_gwsubbas(bas)*DT &
-                        /(ct_bas(bas)*basns_area(bas)) * sum_perc_T(bas)) &
+                        /(ct_bas(bas)*basns_area(bas))*1000. * sum_perc_T(bas)) &
                         /(z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( & 
                          ct_bas(bas)*basns_area(bas)))
      print*,"z_gwsubbas_T :", z_gwsubbas_T(bas), z_gwsubbas(bas), qin_gwsubbas(bas) 
      print*,"sum_perc_T(bas) calc z_gwsubbas:",sum_perc_T(bas)
+
+     z_gwsubbas(bas) = z_gwsubbas(bas) + qin_gwsubbas(bas)*DT/( &
+                       ct_bas(bas)*basns_area(bas))*1000.   !  units (mm)
 
 
 
